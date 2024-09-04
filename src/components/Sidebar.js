@@ -1,6 +1,6 @@
 import Button from "./Button";
 
-export default function Sidebar({ onMakeProject, list }) {
+export default function Sidebar({ onMakeProject, lists }) {
   
   
   return (
@@ -14,7 +14,7 @@ export default function Sidebar({ onMakeProject, list }) {
 
       <ul className="mt-10">
         {/* <li className="p-1 text-xl">Mastering React</li>  */}
-        {[...list].map((item) => <li key={item.id} className="p-1 text-xl">{item.title}</li>)}
+        {[...lists].map((item) => <li key={item.id}><button className='w-full text-left py-2 px-3 my-2 text-stone-300 hover:text-stone-100 hover:bg-stone-800 rounded-md'>{item.title}</button></li>)}
       </ul>
     </aside>
   );
