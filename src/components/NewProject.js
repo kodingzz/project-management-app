@@ -3,10 +3,7 @@ import Input from "./Input";
 import { forwardRef } from "react";
 
 const NewProject = forwardRef(function NewProject({ onSave, onCancel }, ref) {
-  //   const ref1 = useRef("");
-  //   const ref2 = useRef("");
-  //   const ref3 = useRef("");
-  //   ref = [ref1, ref2, ref3];
+
 
   return (
     <div className="w-3/5 mt-16">
