@@ -8,8 +8,8 @@ const  Input=forwardRef(function Input({label,isTextarea,type},ref){
    return <p className='mb-4'>
     <label className='uppercase font-bold text-stone-600 '>{label}</label>
     {isTextarea 
-    ?<textarea ref={ref} className={textClasses}  value={text} onChange={(e)=>setText(e.target.value)}></textarea> 
-    : <input ref={ref} value={text} onChange={(e)=>setText(e.target.value)}  className={textClasses} type={type} />}
+    ?<textarea required ref={ref} className={textClasses}  value={text} onChange={(e)=>setText(e.target.value)}></textarea> 
+    : <input required ref={ref} value={text} onChange={(e)=>setText(e.target.value)}  className={textClasses} type={type} />}
 </p>    
 })
 

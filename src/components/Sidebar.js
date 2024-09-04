@@ -1,24 +1,20 @@
 import Button from "./Button";
 
-export default function Sidebar({ onClick, list }) {
+export default function Sidebar({ onMakeProject, list }) {
+  
+  
   return (
     <aside className="bg-stone-900 w-1/3   rounded-r-xl text-white  py-16 px-8 md:w-72 ">
       <h2 className=" uppercase font-bold mb-8 md:text-xl text-stone-200">
         Your Projects
       </h2>
-      {/* <button onClick={()=>onClick()}  className="px-4 py-3 text-lg  md:text-xl text-stone-400 bg-stone-700  rounded-md hover:bg-stone-600 hover:text-stone-300">
-        + Add Project
-      </button> */}
-      <Button onClick={onClick}>+ Add Project</Button>
+    
+      {/* 버튼 컴포넌트를 만들어 재사용성 증가 */}
+      <Button onClick={onMakeProject}>+ Add Project</Button>
 
       <ul className="mt-10">
-        {/* <li className="p-1 text-xl">Learning React</li>
-        <li className="p-1 text-xl">Mastering React</li> */}
-        {list.map((item, index) => (
-          <li key={index} className="p-1 text-xl">
-            {item}
-          </li>
-        ))}
+        {/* <li className="p-1 text-xl">Mastering React</li>  */}
+        {[...list].map((item) => <li key={item.id} className="p-1 text-xl">{item.title}</li>)}
       </ul>
     </aside>
   );
