@@ -43,17 +43,30 @@ function App() {
      
     })
   }
-
   function  handleGotoProject(id){
+      setProjectState(prev=>{
+        return {
+          ...prev,
+          selectedProjectId: id,
+        }
+      })
+    }
+   
+
+  function handleDeleteProject(){
+    if(window.confirm('정말 삭제 할거에요?')){
+      setProjectState(prev=>{
+        return {
+          ...prev,
+          selectedProjectId: undefined,
+          projectLists: prev.projectLists.filter(project=>project!==selectedProject)
+        }
+      })
     
-    setProjectState(prev=>{
-      return {
-        ...prev,
-        selectedProjectId: id,
-      }
-    })
+    }
+   
   }
-  // find 메소드 
+  // find 메소드  : 제공된 배열에서 제공된 테스트 함수를 만족하는 첫 번째 요소를 반환,  만족하는 값이 없으면 undefined가 반환
   let selectedProject= projectState.projectLists.find(project=>project.id===projectState.selectedProjectId)
 
   if(selectedProject===undefined){
@@ -64,7 +77,7 @@ function App() {
   }
   
   
-  let  content= <SelectedProject project={selectedProject}/>;
+  let  content= <SelectedProject project={selectedProject} onDeleteProject={handleDeleteProject}/>;
 
   if(projectState.selectedProjectId===undefined){
     content=<NoProject onMakeProject={handleMakeProject}  />

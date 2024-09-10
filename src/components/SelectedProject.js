@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 
-export default function SelectedProject({project}){
+export default function SelectedProject({project,onDeleteProject}){
     const [currentTask,setCurrentTask]= useState('');
     const [tasks,setTasks]= useState([]);
 
@@ -13,16 +13,23 @@ export default function SelectedProject({project}){
 
     function handleAddTasks(e){
         e.preventDefault();
+        if(currentTask.trim()===''){
+            return;
+        }
         setTasks(prev=>[...prev,currentTask]);
         setCurrentTask('');
        
+    }
+
+    function handleDeleteTask(list){
+        list.remove();
     }
 
     return <div className="w-[35rem] mt-16">
         <header className="pb-4 mb-4 border-b-2 border-stone-300 ">
             <div className="flex items-center justify-between">
                 <h1 className=' text-3xl font-bold text-stone-700 mb-2'>{project.title}</h1>
-                <button className="font-bold text-stone-700 hover:text-stone-900 ">Delete</button>
+                <button className="font-bold text-stone-700 hover:text-stone-900 " onClick={onDeleteProject}>Delete</button>
             </div>
 
             <p className='text-stone-500 mb-5'>{formattedDate}</p>
@@ -34,15 +41,20 @@ export default function SelectedProject({project}){
         
         <h1 className=' mb-5 text-3xl text-stone-700 font-bold'>Tasks</h1>
         <form className='mb-4 flex' onSubmit={handleAddTasks}>
-            <input type="text" className="bg-stone-200 rounded-sm w-2/5 mr-5 border-b-2   border-stone-300 hover:border-stone-600 focus:outline-none focus:border-stone-600 p-1.5" 
-            value={currentTask} onChange={(e)=>setCurrentTask(e.target.value)}  />
-            <button className="font-semibold">Add Task</button>
+            <input type="text" 
+            className="text-stone-700 bg-stone-200 rounded-sm w-2/5 mr-5 border-b-2   border-stone-300 hover:border-stone-600 focus:outline-none focus:border-stone-600 p-1.5" 
+            value={currentTask}
+             onChange={(e)=>setCurrentTask(e.target.value)}/>
+            <button className="font-bold text-stone-700 hover:text-stone-900">Add Task</button>
          </form>    
          <ul className="bg-stone-100 py-10 px-4">
            {tasks.map((task,index)=>{
-               return <div  key={index} className="flex justify-between mb-5 font-semibold">
-                    <li className="">{task}</li>
-                    <button>Clear</button>
+               return <div  key={index} className="font-semibold">
+                    <li className='flex justify-between mb-5 '>
+                        {task}
+                        <button onClick={(e)=>handleDeleteTask(e.target.parentElement)} className='font-bold text-stone-700 hover:text-stone-900 '>Clear</button>
+                    </li>
+                   
                 </div>  
            })}
          </ul>
