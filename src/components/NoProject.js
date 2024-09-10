@@ -3,7 +3,7 @@ import noProjectImg from '../assets/no-projects.png';
 import Button from './Button';
 
 export default function NoProject({onMakeProject}){
-    return <div className='w-3/4 py-20 px-5 text-center'>
+    return <div className='w-3/5 py-20 px-5 text-center'>
                 <img className="mx-auto mb-5 object-contain w-16 h-16" src={noProjectImg} alt='noProjectImg' />
                 <h2 className='mb-5 text-xl text-stone-700 font-bold'>No Project Selected</h2>
                 <p className='text-stone-500 mb-5'>Select a project or get started with a new one</p>

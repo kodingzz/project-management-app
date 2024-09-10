@@ -9,6 +9,7 @@ function App() {
   const [projectState,setProjectState]= useState({
     selectedProjectId: undefined,
     projectLists:[],
+    taskLists:[],
   })
 
   function handleMakeProject() {
@@ -51,33 +52,59 @@ function App() {
         }
       })
     }
-   
 
-  function handleDeleteProject(){
-    if(window.confirm('정말 삭제 할거에요?')){
+  
+ function handleDeleteProject(){
+      if(window.confirm('정말 삭제 할거에요?')){
+        setProjectState(prev=>{
+          return {
+            ...prev,
+            selectedProjectId: undefined,
+            projectLists: prev.projectLists.filter(project=>project!==selectedProject)
+          }
+        })
+      
+      }
+     
+    }
+
+    function handleAddTask(enteredTask){
+      setProjectState(prev=>{
+        const newTask ={
+           enteredTask :enteredTask,
+           taskId: Math.random()*100,
+           projectId: prev.selectedProjectId,
+        }
+        return {
+          ...prev,
+         taskLists: [...prev.taskLists, newTask],
+        }
+      })
+
+    }
+    function handleDeleteTask(id){
+      
       setProjectState(prev=>{
         return {
           ...prev,
-          selectedProjectId: undefined,
-          projectLists: prev.projectLists.filter(project=>project!==selectedProject)
+          taskLists : prev.taskLists.filter((task)=>task.id!==id),
         }
       })
-    
     }
    
-  }
+
+ 
   // find 메소드  : 제공된 배열에서 제공된 테스트 함수를 만족하는 첫 번째 요소를 반환,  만족하는 값이 없으면 undefined가 반환
   let selectedProject= projectState.projectLists.find(project=>project.id===projectState.selectedProjectId)
-
-  if(selectedProject===undefined){
-    selectedProject={
-      id: -1,
-    }
-
-  }
   
-  
-  let  content= <SelectedProject project={selectedProject} onDeleteProject={handleDeleteProject}/>;
+  let  content= <SelectedProject 
+      project={selectedProject}
+      onDeleteProject={handleDeleteProject}
+      onAddTask={handleAddTask}
+      onDeleteTask={handleDeleteTask}
+      taskList={projectState.taskLists}
+      />;
+      
 
   if(projectState.selectedProjectId===undefined){
     content=<NoProject onMakeProject={handleMakeProject}  />
@@ -94,7 +121,11 @@ function App() {
   return (
     <>
         <div className=" h-screen my-8 flex gap-8 ">
-          <Sidebar onMakeProject={handleMakeProject} lists={projectState.projectLists} selectedProjectId={selectedProject.id} onGotoProject={handleGotoProject} />
+          <Sidebar 
+          onMakeProject={handleMakeProject} 
+          lists={projectState.projectLists}
+           selectedProjectId={projectState.selectedProjectId}
+            onGotoProject={handleGotoProject} />
           {content}
         </div>
     </>
