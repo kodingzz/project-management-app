@@ -1,9 +1,12 @@
 import Input from "./Input";
 import {  useRef } from "react";
 import Modal from "./Modal";
- export default function NewProject({ onEndProject ,onCancelProject}) {
+import { ProjectManagmenet } from '../store/project_management';
+import { useContext } from 'react';
+ export default function NewProject() {
   
-  
+  const {endProject,cancelProject} =useContext(ProjectManagmenet);
+
   const title =useRef();
   const desc =useRef();
   const dueDate =useRef();
@@ -18,7 +21,7 @@ import Modal from "./Modal";
       dialog.current.open();
       return;
     }
-    onEndProject({
+   endProject({
       title:enteredTitle,
       description:enteredDescription,
       dueDate:enteredDueDate,
@@ -39,7 +42,7 @@ import Modal from "./Modal";
       <menu className="flex items-center justify-end">
         <button
           className="text-stone-950 px-5 py-2 hover:text-stone-500"
-          onClick={onCancelProject}
+          onClick={cancelProject}
         >
           Cancel
         </button>

@@ -3,6 +3,9 @@ import NewProject from "./components/NewProject";
 import NoProject from "./components/NoProject";
 import {  useState } from "react";
 import SelectedProject from "./components/SelectedProject";
+import { ProjectManagmenet } from './store/project_management';
+import { TaskManagmenet } from './store/task_management';
+
 function App() {
 
   
@@ -87,48 +90,52 @@ function App() {
       setProjectState(prev=>{
         return {
           ...prev,
-          taskLists : prev.taskLists.filter((task)=>task.id!==id),
+          taskLists : prev.taskLists.filter((item)=>item.taskId!==id),
         }
       })
     }
    
 
- 
   // find 메소드  : 제공된 배열에서 제공된 테스트 함수를 만족하는 첫 번째 요소를 반환,  만족하는 값이 없으면 undefined가 반환
   let selectedProject= projectState.projectLists.find(project=>project.id===projectState.selectedProjectId)
   
-  let  content= <SelectedProject 
-      project={selectedProject}
-      onDeleteProject={handleDeleteProject}
-      onAddTask={handleAddTask}
-      onDeleteTask={handleDeleteTask}
-      taskList={projectState.taskLists}
-      />;
-      
+  const projectValue ={
+    projectLists: projectState.projectLists,
+    selectedProjectId : projectState.selectedProjectId,
+    selectedProject :selectedProject,
+
+    makeProject :handleMakeProject,
+    endProject :handleEndProject,
+    cancelProject: handleCancelProject,
+    deleteProject: handleDeleteProject,
+    gotoProject: handleGotoProject,
+
+  }
+  
+  const taskValue= {
+    taskLists: projectState.taskLists,
+    addTask:handleAddTask,
+    deleteTask:handleDeleteTask,
+}
+
+  let  content= <SelectedProject />;
 
   if(projectState.selectedProjectId===undefined){
-    content=<NoProject onMakeProject={handleMakeProject}  />
+    content=<NoProject/>
   }
   else if(projectState.selectedProjectId===null){
-    content = <NewProject
-    onEndProject ={handleEndProject}
-    onCancelProject={handleCancelProject}
-  />
+    content = <NewProject/>
   }
 
-  
-
   return (
-    <>
+    <ProjectManagmenet.Provider value={projectValue}>
         <div className=" h-screen my-8 flex gap-8 ">
-          <Sidebar 
-          onMakeProject={handleMakeProject} 
-          lists={projectState.projectLists}
-           selectedProjectId={projectState.selectedProjectId}
-            onGotoProject={handleGotoProject} />
-          {content}
+          <Sidebar/>
+            <TaskManagmenet.Provider value={taskValue}>
+                {content}
+            </TaskManagmenet.Provider>
         </div>
-    </>
+    </ProjectManagmenet.Provider>
 
   );
 }

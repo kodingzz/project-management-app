@@ -1,7 +1,10 @@
 import { useRef, useState } from 'react'
 import Modal from './Modal';
+import { useContext } from 'react';
+import { TaskManagmenet } from '../store/task_management';
+export default function NewTask(){
 
-export default function NewTask({onAddTask}){
+    const {addTask} = useContext(TaskManagmenet);
 
     const [enteredTask,setEnteredTask]= useState('');
     const dialog =useRef();
@@ -15,7 +18,7 @@ export default function NewTask({onAddTask}){
             dialog.current.open();
             return;
         }
-        onAddTask(enteredTask);
+        addTask(enteredTask);
         setEnteredTask('');
     }
     return (
