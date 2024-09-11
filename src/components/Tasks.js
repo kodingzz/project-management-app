@@ -4,7 +4,7 @@ import { TaskManagmenet } from '../store/task_management';
 export default function Tasks(){
     
     const {taskLists,deleteTask} = useContext(TaskManagmenet);
-
+    
     return  <section>
            <h1 className=' mb-5 text-2xl text-stone-700 font-bold'>Tasks</h1>
             <NewTask />

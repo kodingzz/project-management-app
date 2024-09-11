@@ -1,80 +1,54 @@
 import Sidebar from "./components/Sidebar";
 import NewProject from "./components/NewProject";
 import NoProject from "./components/NoProject";
-import {  useState } from "react";
+import {  useReducer } from "react";
 import SelectedProject from "./components/SelectedProject";
 import { ProjectManagmenet } from './store/project_management';
 import { TaskManagmenet } from './store/task_management';
 
-function App() {
 
-  
-  const [projectState,setProjectState]= useState({
-    selectedProjectId: undefined,
-    projectLists:[],
-    taskLists:[],
-  })
-
-  function handleMakeProject() {
-    setProjectState(prev=>{
-      return {
-        ...prev,
-        selectedProjectId: null,
-      }
-    })
+function projectStateReducer(prev,action){
+  if(action.type==='MAKE_PROJECT'){
+    return {
+      ...prev,
+      selectedProjectId: null,
+    } 
   }
-  function handleCancelProject() {
-    setProjectState(prev=>{
-      return {
-        ...prev,
-        selectedProjectId: undefined,
-      }
-    })
-  }
-  function handleEndProject(projectData){
-  
-    setProjectState(prev=>{
-      const newProject ={
-        ...projectData,
-         id: Math.random()*100,
-      }
-      return {
-        ...prev,
-        selectedProjectId :undefined,
-        projectLists:[...prev.projectLists,newProject],
-      }
-   
-     
-    })
-  }
-  function  handleGotoProject(id){
-      setProjectState(prev=>{
+  else if(action.type==='END_PROJECT'){
+    const newProject ={
+          ...action.projectData,
+           id: Math.random()*100,
+        }
         return {
           ...prev,
-          selectedProjectId: id,
+          selectedProjectId :undefined,
+          projectLists:[...prev.projectLists,newProject],
         }
-      })
+  }
+  else if(action.type==='CANCEL_PROJECT'){
+    return {
+      ...prev,
+      selectedProjectId: undefined,
+    } 
+  }
+  else if(action.type==='GOTO_PROJECT'){
+    return {
+      ...prev,
+      selectedProjectId: action.id,
     }
-
+  }
+  else if(action.type==='DELETE_PROJECT'){
+ 
+    return {
+          ...prev,
+          selectedProjectId: undefined,
+          projectLists: prev.projectLists.filter(project=>project!==action.selectedProject)
+        }
   
- function handleDeleteProject(){
-      if(window.confirm('정말 삭제 할거에요?')){
-        setProjectState(prev=>{
-          return {
-            ...prev,
-            selectedProjectId: undefined,
-            projectLists: prev.projectLists.filter(project=>project!==selectedProject)
-          }
-        })
-      
-      }
-     
-    }
-
-    function handleAddTask(enteredTask){
-      setProjectState(prev=>{
-        const newTask ={
-           enteredTask :enteredTask,
+  }
+  else if(action.type==='ADD_TASK'){
+       const newTask ={
+           enteredTask : action.enteredTask,
            taskId: Math.random()*100,
            projectId: prev.selectedProjectId,
         }
@@ -82,22 +56,84 @@ function App() {
           ...prev,
          taskLists: [...prev.taskLists, newTask],
         }
+  }
+  else if(action.type==='DELETE_TASK'){
+ return {
+        ...prev,
+        taskLists : prev.taskLists.filter((item)=>item.taskId!==action.id),
+      }
+  }
+
+}
+
+function App() {
+ 
+
+  const [projectState,projectStateDipatch] =useReducer(projectStateReducer,{
+    selectedProjectId: undefined,
+    projectLists:[],
+    taskLists:[],
+  })
+  
+  
+  function handleMakeProject() {
+    projectStateDipatch({
+      type:'MAKE_PROJECT'
+      }
+    );
+    
+  }
+  function handleCancelProject() {
+    projectStateDipatch({
+      type:'CANCEL_PROJECT'
+    })
+  }
+  function handleEndProject(projectData){
+  
+    projectStateDipatch({
+      type:'END_PROJECT',
+      projectData: projectData,
+    });
+   
+  }
+
+  function  handleGotoProject(id){
+
+      projectStateDipatch({
+        type:'GOTO_PROJECT',
+        id: id,
+      })
+    }
+
+  
+ function handleDeleteProject(){
+      if(window.confirm('정말 삭제 할거에요?')){
+        projectStateDipatch({
+          type:'DELETE_PROJECT',
+          selectedProject :selectedProject
+        })
+      
+      }
+     
+    }
+
+    function handleAddTask(enteredTask){
+      projectStateDipatch({
+        type:'ADD_TASK',
+        enteredTask: enteredTask,
       })
 
     }
     function handleDeleteTask(id){
-      
-      setProjectState(prev=>{
-        return {
-          ...prev,
-          taskLists : prev.taskLists.filter((item)=>item.taskId!==id),
-        }
+      projectStateDipatch({
+        type:'DELETE_TASK',
+        id: id,
       })
     }
    
 
-  // find 메소드  : 제공된 배열에서 제공된 테스트 함수를 만족하는 첫 번째 요소를 반환,  만족하는 값이 없으면 undefined가 반환
-  let selectedProject= projectState.projectLists.find(project=>project.id===projectState.selectedProjectId)
+    // find 메소드  : 제공된 배열에서 제공된 테스트 함수를 만족하는 첫 번째 요소를 반환,  만족하는 값이 없으면 undefined가 반환
+    let selectedProject= projectState.projectLists.find(project=>project.id===projectState.selectedProjectId)
   
   const projectValue ={
     projectLists: projectState.projectLists,
@@ -114,8 +150,8 @@ function App() {
   
   const taskValue= {
     taskLists: projectState.taskLists,
-    addTask:handleAddTask,
-    deleteTask:handleDeleteTask,
+    addTask: handleAddTask,
+    deleteTask: handleDeleteTask,
 }
 
   let  content= <SelectedProject />;

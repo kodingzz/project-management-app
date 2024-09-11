@@ -7,6 +7,7 @@ import { useContext } from 'react';
 
 export default function NoProject(){
     const {makeProject}= useContext(ProjectManagmenet);
+    
     return <div className='w-3/5 py-20 px-5 text-center'>
                 <img className="mx-auto mb-5 object-contain w-16 h-16" src={noProjectImg} alt='noProjectImg' />
                 <h2 className='mb-5 text-xl text-stone-700 font-bold'>No Project Selected</h2>
