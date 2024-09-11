@@ -5,3 +5,7 @@
 
 # problem: props-drilling (속성 내리 꽂기)
 > 가장 바깥 component(App)에서 원하는 component에 props을 전달하기위해 두 컴포넌트 사이에 있는 컴포넌트들에 props을 계속해서 전달하는 과정
+
+# problem solving : Context API 이용해 Props-drilling 해결
+
+# 코드 간결화하기위해 usteState 대신 useReducer 시용
